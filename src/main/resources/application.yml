@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: safevillage-server
+
+  sql:
+    init:
+      platform: postgres
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+
+  jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: ${IS_DEVELOPMENT:true} # 개발 환경 한정 SQL 로그
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true # 예약어 충돌 방지
+
+server:
+  port: ${PORT:8080}
+  error:
+    whitelabel:
+      enabled: false
