@@ -1,4 +1,4 @@
-package com.safevillage.safevillage.domain.controller;
+package com.safevillage.safevillage.domain;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
