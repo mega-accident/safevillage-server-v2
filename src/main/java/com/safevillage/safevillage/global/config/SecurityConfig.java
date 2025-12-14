@@ -1,6 +1,6 @@
-package com.safevillage.safevillage.globlal.config;
+package com.safevillage.safevillage.global.config;
 
-import com.safevillage.safevillage.globlal.jwt.JwtAuthenticationFilter;
+import com.safevillage.safevillage.global.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +28,7 @@ public class SecurityConfig {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/signup", "/signin").permitAll()
+            .requestMatchers("/signup", "/signin", "/").permitAll()
             .anyRequest().authenticated()
         )
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

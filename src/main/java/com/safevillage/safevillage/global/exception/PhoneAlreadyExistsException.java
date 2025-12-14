@@ -1,6 +1,5 @@
-package com.safevillage.safevillage.globlal.exception;
+package com.safevillage.safevillage.global.exception;
 
-import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 

@@ -1,4 +1,4 @@
-package com.safevillage.safevillage.globlal.jwt;
+package com.safevillage.safevillage.global.jwt;
 
 import com.safevillage.safevillage.domain.auth.entity.Role;
 import jakarta.servlet.FilterChain;
