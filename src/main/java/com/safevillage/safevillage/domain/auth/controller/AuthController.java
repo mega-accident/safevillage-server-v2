@@ -4,10 +4,12 @@ import com.safevillage.safevillage.domain.auth.dto.auth.SigninRequest;
 import com.safevillage.safevillage.domain.auth.dto.auth.SigninResponse;
 import com.safevillage.safevillage.domain.auth.dto.auth.SignupRequest;
 import com.safevillage.safevillage.domain.auth.service.AuthService;
+import com.safevillage.safevillage.globlal.jwt.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
+  private static final int ONE_DAY = 24 * 60 * 60;
   private final AuthService authService;
+
+  @Value("${jwt.cookie.secure}")
+  private boolean cookieSecure;
 
   @PostMapping("/signup")
   public ResponseEntity<Void> signup(@Valid @RequestBody SignupRequest request) {
@@ -31,9 +37,9 @@ public class AuthController {
 
     Cookie cookie = new Cookie("accessToken", signinResponse.getAccessToken());
     cookie.setHttpOnly(true);
-    cookie.setSecure(false); // 개발 환경이므로 false, 프로덕션에서는 true
+    cookie.setSecure(cookieSecure);
     cookie.setPath("/");
-    cookie.setMaxAge(24 * 60 * 60); // 24시간
+    cookie.setMaxAge(ONE_DAY);
 
     response.addCookie(cookie);
 

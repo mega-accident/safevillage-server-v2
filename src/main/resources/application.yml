@@ -25,6 +25,8 @@ spring:
 jwt:
   secret: ${JWT_SECRET}
   expiration: ${JWT_EXPIRATION}
+  cookie:
+    secure: ${JWT_COOKIE_SECURE}
 
 server:
   port: ${PORT:8080}
