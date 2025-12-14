@@ -3,6 +3,7 @@ package com.safevillage.safevillage.domain.auth.service;
 import com.safevillage.safevillage.domain.auth.dto.auth.SigninRequest;
 import com.safevillage.safevillage.domain.auth.dto.auth.SigninResponse;
 import com.safevillage.safevillage.domain.auth.dto.auth.SignupRequest;
+import com.safevillage.safevillage.domain.auth.entity.Role;
 import com.safevillage.safevillage.domain.auth.entity.User;
 import com.safevillage.safevillage.domain.auth.repository.UserRepository;
 import com.safevillage.safevillage.globlal.exception.EmailAlreadyExistsException;
@@ -36,6 +37,7 @@ public class AuthService {
         .phone(request.getPhone())
         .email(request.getEmail())
         .password(passwordEncoder.encode(request.getPassword()))
+        .role(Role.USER)
         .build();
 
     userRepository.save(user);
@@ -50,7 +52,7 @@ public class AuthService {
       throw new IllegalArgumentException("전화번호 또는 비밀번호가 일치하지 않습니다");
     }
 
-    String accessToken = jwtUtil.generateToken(user.getPhone());
+    String accessToken = jwtUtil.generateToken(user.getPhone(),  user.getRole());
 
     return new SigninResponse(accessToken);
   }

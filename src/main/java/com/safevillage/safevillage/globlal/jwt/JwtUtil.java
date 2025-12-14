@@ -1,5 +1,6 @@
 package com.safevillage.safevillage.globlal.jwt;
 
+import com.safevillage.safevillage.domain.auth.entity.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -23,12 +24,13 @@ public class JwtUtil {
     return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
   }
 
-  public String generateToken(String phone) {
+  public String generateToken(String phone, Role role) {
     Date now = new Date();
     Date expiryDate = new Date(now.getTime() + expiration);
 
     return Jwts.builder()
         .subject(phone)
+        .claim("role", role)
         .issuedAt(now)
         .expiration(expiryDate)
         .signWith(getSigningKey())
@@ -56,4 +58,15 @@ public class JwtUtil {
       return false;
     }
   }
+
+    public Role getRoleFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        String roleString = claims.get("role", String.class);
+        return Role.valueOf(roleString);
+    }
 }
