@@ -1,6 +1,8 @@
-package com.safevillage.safevillage.globlal.exception;
+package com.safevillage.safevillage.globlal.handler;
 
 import com.safevillage.safevillage.globlal.dto.ErrorResponse;
+import com.safevillage.safevillage.globlal.exception.EmailAlreadyExistsException;
+import com.safevillage.safevillage.globlal.exception.PhoneAlreadyExistsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,18 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
     ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+  }
+
+  @ExceptionHandler(PhoneAlreadyExistsException.class)
+  public ResponseEntity<ErrorResponse> handlePhoneAlreadyExistsException(PhoneAlreadyExistsException e) {
+      ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+  }
+
+  @ExceptionHandler(EmailAlreadyExistsException.class)
+  public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(EmailAlreadyExistsException e) {
+      ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)

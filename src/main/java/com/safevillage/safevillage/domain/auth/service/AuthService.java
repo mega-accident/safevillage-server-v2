@@ -5,6 +5,8 @@ import com.safevillage.safevillage.domain.auth.dto.auth.SigninResponse;
 import com.safevillage.safevillage.domain.auth.dto.auth.SignupRequest;
 import com.safevillage.safevillage.domain.auth.entity.User;
 import com.safevillage.safevillage.domain.auth.repository.UserRepository;
+import com.safevillage.safevillage.globlal.exception.EmailAlreadyExistsException;
+import com.safevillage.safevillage.globlal.exception.PhoneAlreadyExistsException;
 import com.safevillage.safevillage.globlal.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,11 +24,11 @@ public class AuthService {
   @Transactional
   public void signup(SignupRequest request) {
     if (userRepository.existsByPhone(request.getPhone())) {
-      throw new IllegalArgumentException("이미 사용 중인 전화번호입니다");
+      throw new PhoneAlreadyExistsException("이미 사용 중인 전화번호입니다");
     }
 
     if (userRepository.existsByEmail(request.getEmail())) {
-      throw new IllegalArgumentException("이미 사용 중인 이메일입니다");
+      throw new EmailAlreadyExistsException("이미 사용 중인 이메일입니다");
     }
 
     User user = User.builder()
