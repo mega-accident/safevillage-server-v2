@@ -35,8 +35,10 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException e) {
-    FieldError fieldError = e.getBindingResult().getFieldError();
-    String message = fieldError != null ? fieldError.getDefaultMessage() : "유효하지 않은 입력입니다";
+    String message = e.getBindingResult().getFieldErrors().stream()
+        .map(FieldError::getDefaultMessage)
+        .reduce((msg1, msg2) -> msg1 + ", " + msg2)
+        .orElse("유효하지 않은 입력입니다");
     ErrorResponse errorResponse = new ErrorResponse(message);
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
   }
