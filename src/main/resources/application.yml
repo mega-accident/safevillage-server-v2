@@ -15,12 +15,18 @@ spring:
   jpa:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: ${IS_DEVELOPMENT:true} # 개발 환경 한정 SQL 로그
+    show-sql: ${IS_DEVELOPMENT:true} # SQL 로그
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
         globally_quoted_identifiers: true # 예약어 충돌 방지
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}
+  cookie:
+    secure: ${JWT_COOKIE_SECURE}
 
 server:
   port: ${PORT:8080}
