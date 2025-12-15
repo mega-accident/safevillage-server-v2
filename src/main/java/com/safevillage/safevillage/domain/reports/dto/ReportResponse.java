@@ -3,6 +3,7 @@ package com.safevillage.safevillage.domain.reports.dto;
 import com.safevillage.safevillage.domain.reports.entity.DangerLevel;
 import com.safevillage.safevillage.domain.reports.entity.ReportCategory;
 import com.safevillage.safevillage.domain.reports.entity.ReportStatus;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,5 +37,5 @@ public class ReportResponse {
 
   private ReportStatus status;
 
-  private String createdAt;
+  private LocalDateTime createdAt;
 }

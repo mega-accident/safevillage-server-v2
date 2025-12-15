@@ -11,7 +11,6 @@ import com.safevillage.safevillage.domain.reports.repository.ReportRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -50,27 +49,7 @@ public class ReportService {
     Report savedReport = reportRepository.save(report);
 
     // DTO 변환
-    return ReportResponse.builder()
-        .id(savedReport.getId())
-        .image(savedReport.getImage())
-        .title(savedReport.getTitle())
-        .description(savedReport.getDescription())
-        .category(savedReport.getCategory())
-
-        // Point -> String 변환
-        .lat(String.valueOf(savedReport.getLocation().getY()))
-        .lon(String.valueOf(savedReport.getLocation().getX()))
-
-        .dangerLevel(savedReport.getDangerLevel())
-        .likeCount(savedReport.getLikeCount())
-
-        // 위험 여부 판단
-        .isDanger(isDangerous(savedReport.getDangerLevel()))
-
-        .status(savedReport.getStatus())
-
-        .createdAt(savedReport.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-        .build();
+    return toDto(savedReport);
   }
 
   // 위험도 최상일 시 isDanger true
@@ -105,7 +84,7 @@ public class ReportService {
         .likeCount(report.getLikeCount())
         .isDanger(isDangerous(report.getDangerLevel()))
         .status(report.getStatus())
-        .createdAt(report.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+        .createdAt(report.getCreatedAt())
         .build();
   }
 
