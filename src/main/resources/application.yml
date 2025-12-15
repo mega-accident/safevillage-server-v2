@@ -2,10 +2,6 @@ spring:
   application:
     name: safevillage-server
 
-  sql:
-    init:
-      platform: postgres
-
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${DATABASE_URL}
@@ -14,13 +10,13 @@ spring:
 
   jpa:
     database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
     show-sql: ${IS_DEVELOPMENT:true} # SQL 로그
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
-        globally_quoted_identifiers: true # 예약어 충돌 방지
+        globally_quoted_identifiers: false # PostGIS geometry 타입 호환을 위해 false로 변경
         format_sql: true # 쿼리를 콘솔에서 예쁘게 보기
 
 jwt:
