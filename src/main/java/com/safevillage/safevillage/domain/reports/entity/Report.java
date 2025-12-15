@@ -19,6 +19,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
 
 @Entity
@@ -87,7 +88,7 @@ public class Report {
       Point point = (Point) new WKTReader().read(pointWKT);
       point.setSRID(4326);
       return point;
-    } catch (Exception e) {
+    } catch (ParseException e) {
       throw new RuntimeException("좌표 변환 실패", e);
     }
   }

@@ -9,11 +9,13 @@ import com.safevillage.safevillage.domain.reports.entity.Report;
 import com.safevillage.safevillage.domain.reports.entity.ReportStatus;
 import com.safevillage.safevillage.domain.reports.repository.ReportRepository;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +30,8 @@ public class ReportService {
 
     // 작성자 조회
     User user = userRepository.findByPhone(phone)
-        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다"));
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다") {
+        });
 
     // Entity 생성
     Report report = Report.builder()
@@ -109,7 +112,7 @@ public class ReportService {
   @Transactional(readOnly = true)
   public ReportResponse getReport(Long reportId) {
     Report report = reportRepository.findById(reportId)
-        .orElseThrow(() -> new IllegalArgumentException("해당 신고를 찾을 수 없습니다."));
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 신고를 찾을 수 없습니다."));
 
     return toDto(report);
   }
