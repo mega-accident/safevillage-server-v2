@@ -1,4 +1,4 @@
-package com.safevillage.safevillage.globlal.dto;
+package com.safevillage.safevillage.global.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

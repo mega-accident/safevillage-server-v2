@@ -4,15 +4,16 @@ import com.safevillage.safevillage.domain.auth.dto.auth.SigninRequest;
 import com.safevillage.safevillage.domain.auth.dto.auth.SigninResponse;
 import com.safevillage.safevillage.domain.auth.dto.auth.SignupRequest;
 import com.safevillage.safevillage.domain.auth.service.AuthService;
-import com.safevillage.safevillage.globlal.jwt.JwtUtil;
+import com.safevillage.safevillage.global.dto.BaseResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,13 +27,14 @@ public class AuthController {
   private boolean cookieSecure;
 
   @PostMapping("/signup")
-  public ResponseEntity<Void> signup(@Valid @RequestBody SignupRequest request) {
+  @ResponseStatus(HttpStatus.CREATED)
+  public BaseResponse<Void> signup(@Valid @RequestBody SignupRequest request) {
     authService.signup(request);
-    return ResponseEntity.ok().build();
+    return BaseResponse.ok();
   }
 
   @PostMapping("/signin")
-  public ResponseEntity<SigninResponse> signin(@Valid @RequestBody SigninRequest request, HttpServletResponse response) {
+  public BaseResponse<SigninResponse> signin(@Valid @RequestBody SigninRequest request, HttpServletResponse response) {
     SigninResponse signinResponse = authService.signin(request);
 
     Cookie cookie = new Cookie("accessToken", signinResponse.getAccessToken());
@@ -43,6 +45,6 @@ public class AuthController {
 
     response.addCookie(cookie);
 
-    return ResponseEntity.ok(signinResponse);
+    return BaseResponse.ok(signinResponse);
   }
 }
