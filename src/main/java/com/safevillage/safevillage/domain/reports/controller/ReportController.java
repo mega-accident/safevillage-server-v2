@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -73,22 +74,24 @@ public class ReportController {
 
   // 신고 공감 추가
   @PostMapping("/{reportId}/like")
+  @PreAuthorize("isAuthenticated()")
   public BaseResponse<ReportLikeResponse> likeReport(@PathVariable Long reportId, @AuthenticationPrincipal String phone) {
 
-    if (phone == null) {
-      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
-    }
+//    if (phone == null) {
+//      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
+//    }
 
     ReportLikeResponse response = reportService.likeReport(reportId, phone);
     return BaseResponse.ok(response);
   }
 
   @DeleteMapping("/{reportId}/like")
+  @PreAuthorize("isAuthenticated()")
   public BaseResponse<ReportLikeResponse> unlikeReport(@PathVariable Long reportId, @AuthenticationPrincipal String phone) {
 
-    if (phone == null) {
-      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
-    }
+//    if (phone == null) {
+//      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
+//    }
 
     ReportLikeResponse response = reportService.unlikeReport(reportId, phone);
     return BaseResponse.ok(response);
