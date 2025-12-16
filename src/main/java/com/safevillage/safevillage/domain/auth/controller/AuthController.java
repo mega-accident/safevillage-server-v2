@@ -58,6 +58,6 @@ public class AuthController {
 
     UserResponse response = authService.getUser(phone);
 
-    return new BaseResponse<>(true, response);
+    return BaseResponse.ok(response);
   }
 }

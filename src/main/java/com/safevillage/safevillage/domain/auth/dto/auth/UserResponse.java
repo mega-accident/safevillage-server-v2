@@ -15,6 +15,6 @@ public class UserResponse {
 
   private final String phone;
 
-  private List<ReportResponse> reports;
+  private final List<ReportResponse> reports;
 
 }
