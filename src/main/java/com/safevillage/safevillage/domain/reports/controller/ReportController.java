@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/reports")
@@ -72,14 +73,24 @@ public class ReportController {
 
   // 신고 공감 추가
   @PostMapping("/{reportId}/like")
-  public BaseResponse<ReportLikeResponse> likeReport(@PathVariable Long reportId) {
-    ReportLikeResponse response = reportService.likeReport(reportId);
+  public BaseResponse<ReportLikeResponse> likeReport(@PathVariable Long reportId, @AuthenticationPrincipal String phone) {
+
+    if (phone == null) {
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
+    }
+
+    ReportLikeResponse response = reportService.likeReport(reportId, phone);
     return BaseResponse.ok(response);
   }
 
   @DeleteMapping("/{reportId}/like")
-  public BaseResponse<ReportLikeResponse> unlikeReport(@PathVariable Long reportId) {
-    ReportLikeResponse response = reportService.unlikeReport(reportId);
+  public BaseResponse<ReportLikeResponse> unlikeReport(@PathVariable Long reportId, @AuthenticationPrincipal String phone) {
+
+    if (phone == null) {
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
+    }
+
+    ReportLikeResponse response = reportService.unlikeReport(reportId, phone);
     return BaseResponse.ok(response);
   }
 }

@@ -7,7 +7,9 @@ import com.safevillage.safevillage.domain.reports.dto.ReportLikeResponse;
 import com.safevillage.safevillage.domain.reports.dto.ReportResponse;
 import com.safevillage.safevillage.domain.reports.entity.DangerLevel;
 import com.safevillage.safevillage.domain.reports.entity.Report;
+import com.safevillage.safevillage.domain.reports.entity.ReportLike;
 import com.safevillage.safevillage.domain.reports.entity.ReportStatus;
+import com.safevillage.safevillage.domain.reports.repository.ReportLikeRepository;
 import com.safevillage.safevillage.domain.reports.repository.ReportRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,7 @@ public class ReportService {
 
   private final ReportRepository reportRepository;
   private final UserRepository userRepository;
+  private final ReportLikeRepository reportLikeRepository;
 
   // 신고 생성
   @Transactional
@@ -98,9 +101,21 @@ public class ReportService {
   }
 
   @Transactional
-  public ReportLikeResponse likeReport(Long reportId) {
+  public ReportLikeResponse likeReport(Long reportId, String phone) {
+
+    User user = getUserByPhone(phone);
     Report report = reportRepository.findById(reportId)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 신고를 찾을 수 없습니다."));
+
+    if (reportLikeRepository.existsByUserAndReport(user, report)) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 공감한 신고입니다.");
+    }
+
+    ReportLike reportLike = ReportLike.builder()
+            .user(user)
+            .report(report)
+            .build();
+    reportLikeRepository.save(reportLike);
 
     report.increaseLikeCount();
 
@@ -110,14 +125,26 @@ public class ReportService {
   }
 
   @Transactional
-  public ReportLikeResponse unlikeReport(Long reportId) {
+  public ReportLikeResponse unlikeReport(Long reportId, String phone) {
+
+    User user = getUserByPhone(phone);
     Report report = reportRepository.findById(reportId)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 신고를 찾을 수 없습니다."));
+
+    ReportLike reportLike = reportLikeRepository.findByUserAndReport(user, report)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "공감하지 않은 신고입니다."));
+
+    reportLikeRepository.delete(reportLike);
 
     report.decreaseLikeCount();
 
     return ReportLikeResponse.builder()
         .likeCount(report.getLikeCount())
         .build();
+  }
+
+  private User getUserByPhone (String phone) {
+    return userRepository.findByPhone(phone)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
   }
 }
