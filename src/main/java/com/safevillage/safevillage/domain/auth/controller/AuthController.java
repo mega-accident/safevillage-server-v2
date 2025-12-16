@@ -3,6 +3,7 @@ package com.safevillage.safevillage.domain.auth.controller;
 import com.safevillage.safevillage.domain.auth.dto.auth.SigninRequest;
 import com.safevillage.safevillage.domain.auth.dto.auth.SigninResponse;
 import com.safevillage.safevillage.domain.auth.dto.auth.SignupRequest;
+import com.safevillage.safevillage.domain.auth.dto.auth.UserResponse;
 import com.safevillage.safevillage.domain.auth.service.AuthService;
 import com.safevillage.safevillage.global.dto.BaseResponse;
 import jakarta.servlet.http.Cookie;
@@ -11,6 +12,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -46,5 +49,15 @@ public class AuthController {
     response.addCookie(cookie);
 
     return BaseResponse.ok(signinResponse);
+  }
+
+  @GetMapping("/myinfo")
+  public BaseResponse<UserResponse> getMyInfo(
+      @AuthenticationPrincipal String phone // 토큰에서 전화번호 자동 추출
+  ) {
+
+    UserResponse response = authService.getUser(phone);
+
+    return new BaseResponse<>(true, response);
   }
 }
