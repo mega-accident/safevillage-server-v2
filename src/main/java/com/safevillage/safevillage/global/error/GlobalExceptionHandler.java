@@ -5,11 +5,13 @@ import com.safevillage.safevillage.global.exception.EmailAlreadyExistsException;
 import com.safevillage.safevillage.global.exception.PhoneAlreadyExistsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @RestControllerAdvice
@@ -27,6 +29,12 @@ public class GlobalExceptionHandler {
   @ResponseStatus(HttpStatus.CONFLICT)
   public BaseResponse<String> handleConflict(RuntimeException e) {
     return new BaseResponse<>(false, e.getMessage());
+  }
+
+  @ExceptionHandler(ResponseStatusException.class)
+  public ResponseEntity<BaseResponse<String>> handleResponseStatusException(ResponseStatusException e) {
+    return ResponseEntity.status(e.getStatusCode())
+        .body(new BaseResponse<>(false, e.getReason()));
   }
 
   // 유효성 검사 실패
