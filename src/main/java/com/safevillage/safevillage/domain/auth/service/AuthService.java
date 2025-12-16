@@ -3,7 +3,7 @@ package com.safevillage.safevillage.domain.auth.service;
 import com.safevillage.safevillage.domain.auth.dto.auth.SigninRequest;
 import com.safevillage.safevillage.domain.auth.dto.auth.SigninResponse;
 import com.safevillage.safevillage.domain.auth.dto.auth.SignupRequest;
-import com.safevillage.safevillage.domain.auth.entity.Role;
+import com.safevillage.safevillage.domain.auth.enums.Role;
 import com.safevillage.safevillage.domain.auth.entity.User;
 import com.safevillage.safevillage.domain.auth.repository.UserRepository;
 import com.safevillage.safevillage.global.exception.EmailAlreadyExistsException;

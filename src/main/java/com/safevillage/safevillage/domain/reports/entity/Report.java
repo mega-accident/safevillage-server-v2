@@ -1,6 +1,9 @@
 package com.safevillage.safevillage.domain.reports.entity;
 
 import com.safevillage.safevillage.domain.auth.entity.User;
+import com.safevillage.safevillage.domain.reports.enums.DangerLevel;
+import com.safevillage.safevillage.domain.reports.enums.ReportCategory;
+import com.safevillage.safevillage.domain.reports.enums.ReportStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
