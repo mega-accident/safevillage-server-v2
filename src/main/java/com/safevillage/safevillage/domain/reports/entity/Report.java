@@ -101,9 +101,7 @@ public class Report {
   }
 
   public void decreaseLikeCount() {
-    if (this.likeCount == null) {
-      this.likeCount = 0;
-    }
-    this.likeCount--;
-  }
+    if (this.likeCount != null && this.likeCount > 0) {
+      this.likeCount--;
+    }}
 }

@@ -114,9 +114,7 @@ public class ReportService {
     Report report = reportRepository.findById(reportId)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 신고를 찾을 수 없습니다."));
 
-    if (report.getLikeCount() > 0) {
-      report.decreaseLikeCount();
-    }
+    report.decreaseLikeCount();
 
     return ReportLikeResponse.builder()
         .likeCount(report.getLikeCount())
