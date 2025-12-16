@@ -76,10 +76,6 @@ public class ReportController {
   @PreAuthorize("isAuthenticated()")
   public BaseResponse<ReportLikeResponse> likeReport(@PathVariable Long reportId, @AuthenticationPrincipal String phone) {
 
-//    if (phone == null) {
-//      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
-//    }
-
     ReportLikeResponse response = reportService.likeReport(reportId, phone);
     return BaseResponse.ok(response);
   }
@@ -87,10 +83,6 @@ public class ReportController {
   @DeleteMapping("/{reportId}/like")
   @PreAuthorize("isAuthenticated()")
   public BaseResponse<ReportLikeResponse> unlikeReport(@PathVariable Long reportId, @AuthenticationPrincipal String phone) {
-
-//    if (phone == null) {
-//      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
-//    }
 
     ReportLikeResponse response = reportService.unlikeReport(reportId, phone);
     return BaseResponse.ok(response);

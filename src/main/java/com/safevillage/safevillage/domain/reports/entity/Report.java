@@ -94,10 +94,7 @@ public class Report {
   }
 
   public void increaseLikeCount() {
-    if (this.likeCount == null) {
-      this.likeCount = 0;
-    }
-    this.likeCount++;
+      this.likeCount++;
   }
 
   public void decreaseLikeCount() {
