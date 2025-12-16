@@ -3,6 +3,7 @@ package com.safevillage.safevillage.domain.reports.service;
 import com.safevillage.safevillage.domain.auth.entity.User;
 import com.safevillage.safevillage.domain.auth.repository.UserRepository;
 import com.safevillage.safevillage.domain.reports.dto.ReportCreateRequest;
+import com.safevillage.safevillage.domain.reports.dto.ReportLikeResponse;
 import com.safevillage.safevillage.domain.reports.dto.ReportResponse;
 import com.safevillage.safevillage.domain.reports.entity.DangerLevel;
 import com.safevillage.safevillage.domain.reports.entity.Report;
@@ -94,5 +95,31 @@ public class ReportService {
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 신고를 찾을 수 없습니다."));
 
     return toDto(report);
+  }
+
+  @Transactional
+  public ReportLikeResponse likeReport(Long reportId) {
+    Report report = reportRepository.findById(reportId)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 신고를 찾을 수 없습니다."));
+
+    report.increaseLikeCount();
+
+    return ReportLikeResponse.builder()
+        .likeCount(report.getLikeCount())
+        .build();
+  }
+
+  @Transactional
+  public ReportLikeResponse unlikeReport(Long reportId) {
+    Report report = reportRepository.findById(reportId)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 신고를 찾을 수 없습니다."));
+
+    if (report.getLikeCount() > 0) {
+      report.decreaseLikeCount();
+    }
+
+    return ReportLikeResponse.builder()
+        .likeCount(report.getLikeCount())
+        .build();
   }
 }
