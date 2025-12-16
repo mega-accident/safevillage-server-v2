@@ -1,6 +1,6 @@
 package com.safevillage.safevillage.global.jwt;
 
-import com.safevillage.safevillage.domain.auth.entity.Role;
+import com.safevillage.safevillage.domain.auth.enums.Role;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;

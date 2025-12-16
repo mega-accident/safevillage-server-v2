@@ -1,7 +1,7 @@
 package com.safevillage.safevillage.domain.reports.dto;
 
-import com.safevillage.safevillage.domain.reports.entity.DangerLevel;
-import com.safevillage.safevillage.domain.reports.entity.ReportCategory;
+import com.safevillage.safevillage.domain.reports.enums.DangerLevel;
+import com.safevillage.safevillage.domain.reports.enums.ReportCategory;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

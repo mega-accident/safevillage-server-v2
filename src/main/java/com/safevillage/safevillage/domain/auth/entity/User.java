@@ -1,5 +1,6 @@
 package com.safevillage.safevillage.domain.auth.entity;
 
+import com.safevillage.safevillage.domain.auth.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.safevillage.safevillage.domain.reports.entity;
+package com.safevillage.safevillage.domain.reports.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
