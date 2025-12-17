@@ -37,3 +37,6 @@ out/
 .vscode/
 
 .env
+
+settings.gradle
+gradle.properties

@@ -19,6 +19,24 @@ spring:
         globally_quoted_identifiers: false # PostGIS geometry 타입 호환을 위해 false로 변경
         format_sql: true # 쿼리를 콘솔에서 예쁘게 보기
 
+  cloud:
+    aws:
+      credentials:
+        access-key: ${AWS_ACCESS_KEY}
+        secret-key: ${AWS_SECRET_KEY}
+      s3:
+        bucket: ${BUCKET_NAME}
+      region:
+        static: ap-northeast-2
+
+
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-4.1-nano
+
 jwt:
   secret: ${JWT_SECRET}
   expiration: ${JWT_EXPIRATION}
