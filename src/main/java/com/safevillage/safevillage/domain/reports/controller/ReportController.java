@@ -81,7 +81,6 @@ public class ReportController {
   }
 
   // 신고 사진 AI 분석
-  @SneakyThrows
   @ResponseBody
   @PostMapping("/ai-analyze")
   @PreAuthorize("isAuthenticated()")

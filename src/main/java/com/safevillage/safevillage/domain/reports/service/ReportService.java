@@ -28,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import software.amazon.awssdk.services.s3.S3Client;
 
+import java.io.IOException;
 import java.net.URL;
 
 @Service
@@ -162,9 +163,16 @@ public class ReportService {
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
   }
 
-  @SneakyThrows
   public ReportAnalyzeDto analyzeReport(MultipartFile file) {
-      URL url = createUrl.uploadFile(file);
+
+      URL url = null;
+      try {
+          url = createUrl.uploadFile(file);
+      } catch (IOException e) {
+          throw new RuntimeException(e);
+      }
+
+      URL finalUrl = url;
       String  prompt =
               """
               당신은 안전한 마을을 만드는 AI 비서입니다.
@@ -180,7 +188,7 @@ public class ReportService {
 
       ReportAnalyzeDto reportAnalyzeDto = chatClient.prompt()
               .user(userSpec -> userSpec.text(prompt)
-                      .media(MimeTypeUtils.IMAGE_JPEG, url))
+                      .media(MimeTypeUtils.IMAGE_JPEG, finalUrl))
               .call()
               .entity(new ParameterizedTypeReference<ReportAnalyzeDto>() {});
 
