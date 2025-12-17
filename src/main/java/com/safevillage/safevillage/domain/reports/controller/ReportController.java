@@ -85,7 +85,7 @@ public class ReportController {
   @ResponseBody
   @PostMapping("/ai-analyze")
   @PreAuthorize("isAuthenticated()")
-  public ReportAnalyzeDto analyzeReport(@RequestBody MultipartFile file) {
+  public ReportAnalyzeDto analyzeReport(@RequestPart("file") MultipartFile file) {
       return  reportService.analyzeReport(file);
   }
 }

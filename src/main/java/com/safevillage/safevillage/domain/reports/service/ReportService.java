@@ -172,7 +172,7 @@ public class ReportService {
               - title 의 내용을 작성하세요
               - category 는 주어진 Enum 중 하나를 선택하세요
               - description 의 내용을 작성하세요
-              - dangerDegree 는 주어진 Enum 중 하나를 선택하세요
+              - dangerLevel 는 주어진 Enum 중 하나를 선택하세요
               - image 는 Media 로 주어진 이미지 URL 을 그대로 작성하여 반환하세요
 
               *아무런 내용 없이 오직 주어진 Entity 형식의 내용만 반환하세요*
