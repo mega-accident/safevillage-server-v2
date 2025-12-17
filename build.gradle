@@ -21,7 +21,14 @@ configurations {
 }
 
 repositories {
+    maven { url 'https://repo.spring.io/milestone' } // For spring Ai
     mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.ai:spring-ai-bom:1.0.0-M5" // For spring Ai
+    }
 }
 
 dependencies {
@@ -42,6 +49,8 @@ dependencies {
     implementation 'org.hibernate.orm:hibernate-community-dialects:6.6.36.Final'
     implementation 'org.locationtech.jts:jts-core:1.19.0'
     implementation 'org.hibernate.orm:hibernate-spatial:6.4.4.Final'
+    implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter'
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.1.1'
 }
 
 tasks.named('test') {

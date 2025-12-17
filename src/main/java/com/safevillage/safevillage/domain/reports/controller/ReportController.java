@@ -1,13 +1,11 @@
 package com.safevillage.safevillage.domain.reports.controller;
 
-import com.safevillage.safevillage.domain.reports.dto.ReportCreateRequest;
-import com.safevillage.safevillage.domain.reports.dto.ReportLikeResponse;
-import com.safevillage.safevillage.domain.reports.dto.ReportListResponse;
-import com.safevillage.safevillage.domain.reports.dto.ReportResponse;
+import com.safevillage.safevillage.domain.reports.dto.*;
 import com.safevillage.safevillage.domain.reports.service.ReportService;
 import com.safevillage.safevillage.global.dto.BaseResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -16,14 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/reports")
@@ -86,5 +78,13 @@ public class ReportController {
 
     ReportLikeResponse response = reportService.unlikeReport(reportId, phone);
     return BaseResponse.ok(response);
+  }
+
+  // 신고 사진 AI 분석
+  @ResponseBody
+  @PostMapping("/ai-analyze")
+  @PreAuthorize("isAuthenticated()")
+  public ReportAnalyzeDto analyzeReport(@RequestPart("file") MultipartFile file) {
+      return  reportService.analyzeReport(file);
   }
 }

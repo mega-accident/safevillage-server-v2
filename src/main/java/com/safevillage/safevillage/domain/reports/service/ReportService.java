@@ -2,6 +2,7 @@ package com.safevillage.safevillage.domain.reports.service;
 
 import com.safevillage.safevillage.domain.auth.entity.User;
 import com.safevillage.safevillage.domain.auth.repository.UserRepository;
+import com.safevillage.safevillage.domain.reports.dto.ReportAnalyzeDto;
 import com.safevillage.safevillage.domain.reports.dto.ReportCreateRequest;
 import com.safevillage.safevillage.domain.reports.dto.ReportLikeResponse;
 import com.safevillage.safevillage.domain.reports.dto.ReportResponse;
@@ -11,13 +12,24 @@ import com.safevillage.safevillage.domain.reports.entity.ReportLike;
 import com.safevillage.safevillage.domain.reports.enums.ReportStatus;
 import com.safevillage.safevillage.domain.reports.repository.ReportLikeRepository;
 import com.safevillage.safevillage.domain.reports.repository.ReportRepository;
+import com.safevillage.safevillage.domain.reports.storage.CreateUrl;
+import lombok.SneakyThrows;
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MimeTypeUtils;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import software.amazon.awssdk.services.s3.S3Client;
+
+import java.io.IOException;
+import java.net.URL;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +39,10 @@ public class ReportService {
   private final UserRepository userRepository;
   private final ReportLikeRepository reportLikeRepository;
 
-  // 신고 생성
+  private final CreateUrl createUrl;
+  private final ChatClient chatClient;
+
+    // 신고 생성
   @Transactional
   public ReportResponse createReport(ReportCreateRequest request, String phone) {
 
@@ -147,4 +162,39 @@ public class ReportService {
     return userRepository.findByPhone(phone)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
   }
+
+  public ReportAnalyzeDto analyzeReport(MultipartFile file) {
+
+      URL url = null;
+      try {
+          url = createUrl.uploadFile(file);
+      } catch (IOException e) {
+          throw new RuntimeException(e);
+      }
+
+      URL finalUrl = url;
+      String  prompt =
+              """
+              당신은 안전한 마을을 만드는 AI 비서입니다.
+              이미지를 분석하여 마을 주민의 자세한 안전 신고 정보를 작성해주세요.
+              - title 의 내용을 작성하세요
+              - category 는 주어진 Enum 중 하나를 선택하세요
+              - description 의 내용을 작성하세요
+              - dangerLevel 는 주어진 Enum 중 하나를 선택하세요
+              - image 는 Media 로 주어진 이미지 URL 을 그대로 작성하여 반환하세요
+
+              *아무런 내용 없이 오직 주어진 Entity 형식의 내용만 반환하세요*
+              """;
+
+      ReportAnalyzeDto reportAnalyzeDto = chatClient.prompt()
+              .user(userSpec -> userSpec.text(prompt)
+                      .media(MimeTypeUtils.IMAGE_JPEG, finalUrl))
+              .call()
+              .entity(new ParameterizedTypeReference<ReportAnalyzeDto>() {});
+
+      reportAnalyzeDto.setImage(url.toString());
+
+      return reportAnalyzeDto;
+  }
+
 }
